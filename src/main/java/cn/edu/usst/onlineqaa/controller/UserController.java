@@ -32,7 +32,9 @@ public class UserController {
             if(studentCourseMapper.exists(Wrappers.lambdaQuery(StudentCoursePO.class).eq(StudentCoursePO::getStudentId,flag))){
                 session.setAttribute("userinfo",new UserInfoVO(flag,0,1));
             }
-            session.setAttribute("userinfo",new UserInfoVO(flag,0,0));
+            else{
+                session.setAttribute("userinfo",new UserInfoVO(flag,0,0));
+            }
             return 1;
         }
         else{
