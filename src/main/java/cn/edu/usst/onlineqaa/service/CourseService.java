@@ -25,18 +25,30 @@ public class CourseService {
     TeacherMapper teacherMapper;
     @Autowired
     StudentCourseMapper studentCourseMapper;
-    public List<CourseVO> getCourses(){
+    public List<CourseVO> getCourses(String keyWord){
         List<CourseVO> courseVOS = new ArrayList<>();
         List<TeacherCoursePO> teacherCoursePOS = teacherCourseMapper.selectList(null);
         for(TeacherCoursePO teacherCoursePO:teacherCoursePOS){
             CoursePO coursePO = courseMapper.selectById(teacherCoursePO.getCourseId());
             String teacherName = teacherMapper.selectById(teacherCoursePO.getTeacherId()).getUsername();
-            courseVOS.add(new CourseVO(coursePO.getId(),
-                    coursePO.getName(),
-                    coursePO.getTime(),
-                    coursePO.getDescription(),
-                    teacherName,
-                    coursePO.getRate()));
+            if(keyWord == null){
+                courseVOS.add(new CourseVO(coursePO.getId(),
+                        coursePO.getName(),
+                        coursePO.getTime(),
+                        coursePO.getDescription(),
+                        teacherName,
+                        coursePO.getRate()));
+            }
+            else{
+                if(coursePO.toString().contains(keyWord) || teacherName.equals(keyWord)){
+                    courseVOS.add(new CourseVO(coursePO.getId(),
+                            coursePO.getName(),
+                            coursePO.getTime(),
+                            coursePO.getDescription(),
+                            teacherName,
+                            coursePO.getRate()));
+                }
+            }
         }
         return courseVOS;
     }
@@ -44,5 +56,17 @@ public class CourseService {
         for(Integer i:course){
             studentCourseMapper.insert(new StudentCoursePO(null,studentId,i));
         }
+    }
+    public List<Integer> getSelectedCourses(Integer studentId){
+        List<StudentCoursePO> studentCoursePOS = studentCourseMapper.selectList(Wrappers
+                .lambdaQuery(StudentCoursePO.class).eq(StudentCoursePO::getStudentId,studentId));
+        List<Integer> courses = new ArrayList<>();
+        if(studentCoursePOS == null){
+            return courses;
+        }
+        for(StudentCoursePO po:studentCoursePOS){
+            courses.add(po.getCourseId());
+        }
+        return courses;
     }
 }

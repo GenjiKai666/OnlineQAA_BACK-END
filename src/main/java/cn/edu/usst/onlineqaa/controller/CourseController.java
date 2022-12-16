@@ -18,8 +18,8 @@ public class CourseController {
     @Autowired
     CourseService courseService;
     @RequestMapping(value = "/course/getcourses",method = RequestMethod.GET)
-    public List<CourseVO> getCourses(){
-        return courseService.getCourses();
+    public List<CourseVO> getCourses(String keyWord){
+        return courseService.getCourses(keyWord);
     }
     @RequestMapping(value = "/course/select",method = RequestMethod.POST)
     public String selectCourse(@RequestBody List<Integer> courses, HttpSession session){
@@ -32,5 +32,10 @@ public class CourseController {
             session.setAttribute("userinfo",new UserInfoVO(userinfo.getId(), 0,1));
             return "选课成功";
         }
+    }
+    @RequestMapping(value = "/course/getselectedcourses",method = RequestMethod.GET)
+    public List<Integer> getSelectedCourses(HttpSession session){
+        UserInfoVO userinfo = (UserInfoVO)session.getAttribute("userinfo");
+        return courseService.getSelectedCourses(userinfo.getId());
     }
 }
