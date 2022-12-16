@@ -23,6 +23,7 @@ create table if not exists
     COURSE
 (
     ID          int          not null auto_increment primary key,
+    NAME        varchar(20)  not null unique ,
     TIME        varchar(20)  not null unique,
     DESCRIPTION varchar(150) not null,
     RATE        int          not null

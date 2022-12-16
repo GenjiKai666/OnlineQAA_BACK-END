@@ -13,16 +13,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-@TableName("COURSE")
-public class CoursePO {
+@TableName("TEACHER_COURSE")
+public class TeacherCoursePO {
     @TableId(type = IdType.AUTO)
     Integer id;
     @TableField
-    String name;
+    Integer teacherId;
     @TableField
-    String time;
-    @TableField
-    String description;
-    @TableField
-    Integer rate;
+    Integer courseId;
 }

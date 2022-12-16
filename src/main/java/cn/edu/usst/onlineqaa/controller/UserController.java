@@ -2,8 +2,11 @@ package cn.edu.usst.onlineqaa.controller;
 
 import cn.edu.usst.onlineqaa.bean.dto.LoginDTO;
 import cn.edu.usst.onlineqaa.bean.dto.RegisterDTO;
+import cn.edu.usst.onlineqaa.bean.po.StudentCoursePO;
 import cn.edu.usst.onlineqaa.bean.vo.UserInfoVO;
+import cn.edu.usst.onlineqaa.mapper.StudentCourseMapper;
 import cn.edu.usst.onlineqaa.service.UserService;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +19,8 @@ import javax.servlet.http.HttpSession;
 public class UserController {
     @Autowired
     UserService userService;
+    @Autowired
+    StudentCourseMapper studentCourseMapper;
     @RequestMapping(value = "/user/studentregister",method = RequestMethod.POST)
     public int studentRegister(@RequestBody RegisterDTO registerDTO){
         return userService.studentRegister(registerDTO);
@@ -24,7 +29,10 @@ public class UserController {
     public int studentLogin(@RequestBody LoginDTO loginDTO, HttpSession session){
         Integer flag = userService.studentLogin(loginDTO);
         if(flag != 0){
-            session.setAttribute("userinfo",new UserInfoVO(flag,0));
+            if(studentCourseMapper.exists(Wrappers.lambdaQuery(StudentCoursePO.class).eq(StudentCoursePO::getStudentId,flag))){
+                session.setAttribute("userinfo",new UserInfoVO(flag,0,1));
+            }
+            session.setAttribute("userinfo",new UserInfoVO(flag,0,0));
             return 1;
         }
         else{
@@ -35,7 +43,7 @@ public class UserController {
     public int teacherLogin(@RequestBody LoginDTO loginDTO, HttpSession session){
         Integer flag = userService.teacherLogin(loginDTO);
         if(flag != 0){
-            session.setAttribute("userinfo",new UserInfoVO(flag,1));
+            session.setAttribute("userinfo",new UserInfoVO(flag,1,0));
             return 1;
         }
         else{

@@ -9,8 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class UserInfoVO {
+public class CourseVO {
     Integer id;
-    Integer isTeacher;
-    Integer courseSelected; //仅服务于判定学生是否选课
+    String name;
+    String time;
+    String description;
+    String teacherName;
+    Integer rate;
 }
