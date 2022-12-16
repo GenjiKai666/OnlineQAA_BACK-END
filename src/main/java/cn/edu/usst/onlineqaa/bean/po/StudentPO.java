@@ -18,7 +18,7 @@ public class StudentPO {
     @TableId(type = IdType.AUTO)
     Integer id;
     @TableField
-    String student_id;
+    String studentId;
     @TableField
     String username;
     @TableField

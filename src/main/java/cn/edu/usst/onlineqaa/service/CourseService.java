@@ -57,16 +57,23 @@ public class CourseService {
             studentCourseMapper.insert(new StudentCoursePO(null,studentId,i));
         }
     }
-    public List<Integer> getSelectedCourses(Integer studentId){
+    public List<CourseVO> getSelectedCourses(Integer studentId){
+        List<CourseVO> courseVOS = new ArrayList<>();
         List<StudentCoursePO> studentCoursePOS = studentCourseMapper.selectList(Wrappers
                 .lambdaQuery(StudentCoursePO.class).eq(StudentCoursePO::getStudentId,studentId));
-        List<Integer> courses = new ArrayList<>();
-        if(studentCoursePOS == null){
-            return courses;
+        for(StudentCoursePO studentCoursePO:studentCoursePOS){
+            CoursePO coursePO = courseMapper.selectById(studentCoursePO.getCourseId());
+            Integer teacherid = teacherCourseMapper.selectOne(Wrappers
+                    .lambdaQuery(TeacherCoursePO.class)
+                    .eq(TeacherCoursePO::getCourseId,coursePO.getId())).getTeacherId();
+            String teacherName = teacherMapper.selectById(teacherid).getUsername();
+            courseVOS.add(new CourseVO(coursePO.getId(),
+                    coursePO.getName(),
+                    coursePO.getTime(),
+                    coursePO.getDescription(),
+                    teacherName,
+                    coursePO.getRate()));
         }
-        for(StudentCoursePO po:studentCoursePOS){
-            courses.add(po.getCourseId());
-        }
-        return courses;
+        return courseVOS;
     }
 }

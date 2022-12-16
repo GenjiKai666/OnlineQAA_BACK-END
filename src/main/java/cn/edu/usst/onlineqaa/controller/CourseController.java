@@ -1,5 +1,6 @@
 package cn.edu.usst.onlineqaa.controller;
 
+import cn.edu.usst.onlineqaa.bean.po.StudentPO;
 import cn.edu.usst.onlineqaa.bean.vo.CourseVO;
 import cn.edu.usst.onlineqaa.bean.vo.UserInfoVO;
 import cn.edu.usst.onlineqaa.service.CourseService;
@@ -29,12 +30,12 @@ public class CourseController {
         }
         else{
             courseService.selectCourse(courses, userinfo.getId());
-            session.setAttribute("userinfo",new UserInfoVO(userinfo.getId(), 0,1));
+            session.setAttribute("userinfo",new UserInfoVO(userinfo.getId(),userinfo.getUsername(),userinfo.getStudentId(), 0,1));
             return "选课成功";
         }
     }
     @RequestMapping(value = "/course/getselectedcourses",method = RequestMethod.GET)
-    public List<Integer> getSelectedCourses(HttpSession session){
+    public List<CourseVO> getSelectedCourses(HttpSession session){
         UserInfoVO userinfo = (UserInfoVO)session.getAttribute("userinfo");
         return courseService.getSelectedCourses(userinfo.getId());
     }
