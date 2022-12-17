@@ -33,6 +33,8 @@ create table if not exists
     QUESTION
 (
     ID     int          not null auto_increment primary key,
+    CREATE_TIME timestamp not null ,
+    ANSWER_TIME timestamp default null,
     INFO   varchar(150) not null,
     ANSWER varchar(150) default null
 ) charset = utf8mb4;
